@@ -5,13 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 public class JWTObject {
-    private String subject; //nome do usuario
-    private Date issuedAt; //data de criação do token
-    private Date expiration; // data de expiração do token
-    private List<String> roles; //perfis de acesso
-    
-    
-    public String getSubject() {
+	private String subject; // nome do usuario
+	private Date issuedAt; // data de criação do token
+	private Date expiration; // data de expiração do token
+	private List<String> roles; // perfis de acesso
+
+	public String getSubject() {
 		return subject;
 	}
 
@@ -43,7 +42,7 @@ public class JWTObject {
 		this.roles = roles;
 	}
 
-	public void setRoles(String... roles){
-        this.roles = Arrays.asList(roles);
-    }
+	public void setRoles(String... roles) {
+		this.roles = Arrays.asList(roles);
+	}
 }

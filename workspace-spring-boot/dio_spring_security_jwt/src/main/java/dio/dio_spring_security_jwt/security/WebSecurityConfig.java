@@ -1,5 +1,6 @@
 package dio.dio_spring_security_jwt.security;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,24 +30,16 @@ import org.h2.server.web.WebServlet;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    @Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public BCryptPasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    private static final String[] SWAGGER_WHITELIST = {
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
-    
-    
-    protected void configure(HttpSecurity http) throws Exception {
-    	//antigo código
+	private static final String[] SWAGGER_WHITELIST = { "/v2/api-docs", "/swagger-resources", "/swagger-resources/**",
+			"/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**" };
+
+	protected void configure(HttpSecurity http) throws Exception {
+		// antigo código
 //        http.headers().frameOptions().disable();
 //        http.cors().and().csrf().disable()
 //                .addFilterAfter(new JWTFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -60,31 +53,26 @@ public class WebSecurityConfig {
 //                .anyRequest().authenticated()
 //                .and()
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        
-        //novo código
-    	http.headers().frameOptions().disable();
+
+		// novo código
+		http.headers().frameOptions().disable();
 //        http.csrf(AbstractHttpConfigurer::disable)
-        http.cors().and().csrf().disable()
-        .addFilterAfter(new JWTFilter(), UsernamePasswordAuthenticationFilter.class)
-        .authorizeHttpRequests()
-                		.requestMatchers(HttpMethod.DELETE).hasRole("MANAGERS")
-                		.requestMatchers(SWAGGER_WHITELIST).permitAll()
-                		.requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/login").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/users").hasAnyRole("USERS","MANAGERS")
-                        .requestMatchers("/managers").hasAnyRole("MANAGERS")
-                        .anyRequest().authenticated()
-                        .and()
-                        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().addFilterAfter(new JWTFilter(), UsernamePasswordAuthenticationFilter.class)
+				.authorizeHttpRequests().requestMatchers(HttpMethod.DELETE).hasRole("MANAGERS")
+				.requestMatchers(SWAGGER_WHITELIST).permitAll().requestMatchers("/h2-console/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/login").permitAll().requestMatchers(HttpMethod.POST, "/users")
+				.permitAll().requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USERS", "MANAGERS")
+				.requestMatchers("/managers").hasAnyRole("MANAGERS").anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //                        .requestMatchers("/admin/**").hasAnyRole("ADMIN","MANAGERS")
 //                        .requestMatchers("/managers/**").hasAnyRole("ADMIN","MANAGERS")
 //                        .requestMatchers("/user/**").hasAnyRole("USERS", "ADMIN","MANAGERS")
 //                        .requestMatchers("/login/**").permitAll()
 //                        .anyRequest().authenticated())
-    }
-    @Bean //HABILITANDO ACESSAR O H2-DATABSE NA WEB
-    public ServletRegistrationBean h2servletRegistration(){
+	}
+
+	@Bean // HABILITANDO ACESSAR O H2-DATABSE NA WEB
+	public ServletRegistrationBean h2servletRegistration() {
 //        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
 //    	ServletRegistrationBean registrationBean = new ServletRegistrationBean<WebServlet>();
 //    	registrationBean.setServlet(new WebServlet());
@@ -93,10 +81,13 @@ public class WebSecurityConfig {
 //    	ServletRegistrationBean registrationBean = new ServletRegistrationBean();
 //    	registrationBean.setServlet(new WebServlet());
 //    	return new ServletRegistrationBean();
-    	
-        ServletRegistrationBean<MyServlet> registrationBean = new ServletRegistrationBean<MyServlet>(new MyServlet(), "/myServlet");
-        registrationBean.setName("MyServlet");
-        registrationBean.setUrlMappings(Arrays.asList("/h2-console/*"));
-        return registrationBean;
-    }
+
+		ServletRegistrationBean<MyServlet> registrationBean = new ServletRegistrationBean<MyServlet>(new MyServlet(),
+				"/myServlet");
+		registrationBean.setName("MyServlet");
+		registrationBean.setUrlMappings(Arrays.asList("/h2-console/*"));
+		return registrationBean;
+	}
+
+
 }

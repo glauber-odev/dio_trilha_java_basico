@@ -11,11 +11,12 @@ import dio.dio_spring_security_jwt.service.UserService;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService service;
-    @PostMapping
-    public void postUser(@RequestBody User user){
-    	System.out.println("Entrou na função postUser");
-        service.createUser(user);
-    }
+	@Autowired
+	private UserService service;
+
+	@PostMapping
+	public void postUser(@RequestBody User user) {
+		System.out.println("Entrou na função postUser");
+		service.createUser(user);
+	}
 }
